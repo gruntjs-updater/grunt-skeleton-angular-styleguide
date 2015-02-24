@@ -32,7 +32,9 @@
     "grunt-contrib-clean": "^0.5.0",
     "grunt-contrib-nodeunit": "^0.3.3",
     "grunt-eslint": "^7.0.1",
-    "load-grunt-tasks": "^3.1.0"
+    "jade": "^1.9.2",
+    "load-grunt-tasks": "^3.1.0",
+    "lodash": "^3.3.1"
   },
   "peerDependencies": {
     "grunt": "~0.4.5"
