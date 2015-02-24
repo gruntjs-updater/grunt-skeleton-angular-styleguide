@@ -6,18 +6,18 @@
  * Licensed under the MIT license.
  */
 
-'use strict';
+"use strict";
 
 module.exports = function(grunt) {
 
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
 
-  grunt.registerMultiTask('skeleton_angular_styleguide', 'Grunt task that generates an angular styleguide using skeleton modules.', function() {
+  grunt.registerMultiTask("skeleton_angular_styleguide", "Grunt task that generates an angular styleguide using skeleton modules.", function() {
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
-      punctuation: '.',
-      separator: ', '
+      punctuation: ".",
+      separator: ", "
     });
 
     // Iterate over all specified file groups.
@@ -26,7 +26,7 @@ module.exports = function(grunt) {
       var src = f.src.filter(function(filepath) {
         // Warn on and remove invalid source files (if nonull was set).
         if (!grunt.file.exists(filepath)) {
-          grunt.log.warn('Source file "' + filepath + '" not found.');
+          grunt.log.warn("Source file \"" + filepath + "\" not found.");
           return false;
         } else {
           return true;
@@ -43,7 +43,7 @@ module.exports = function(grunt) {
       grunt.file.write(f.dest, src);
 
       // Print a success message.
-      grunt.log.writeln('File "' + f.dest + '" created.');
+      grunt.log.writeln("File \"" + f.dest + "\" created.");
     });
   });
 
