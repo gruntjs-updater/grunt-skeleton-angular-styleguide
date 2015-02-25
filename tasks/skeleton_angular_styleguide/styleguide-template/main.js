@@ -109,5 +109,5 @@ angular
     $urlRouterProvider.otherwise('/');
   })
   .controller('MainCtrl', function ($scope) {
-    console.log('main controller loaded');
+
   });

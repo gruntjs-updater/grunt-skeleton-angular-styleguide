@@ -7,6 +7,5 @@ angular
     StyleguideData.getColorsData().then(function (colorsData) {
       $scope.ready      = true;
       $scope.colorsData = colorsData;
-      console.log(colorsData);
     });
   });

@@ -7,7 +7,6 @@ angular
     StyleguideData.getTypographyData().then(function (typographyData) {
       $scope.ready          = true;
       $scope.typographyData = typographyData;
-      console.log(typographyData)
     });
 
     var colors = {};
@@ -17,7 +16,6 @@ angular
           colors[name] = value;
         })
       });
-      console.log('colors', colors);
     });
 
     $scope.getCssStyleFor = function (specs) {

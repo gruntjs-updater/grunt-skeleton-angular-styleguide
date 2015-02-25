@@ -1,7 +1,6 @@
 angular.module('styleguide.component', ['styleguide.common'])
   .controller('ComponentCtrl', function ($scope, $stateParams, StyleguideData) {
     var componentName = $stateParams.name;
-    console.log('ComponentCtrl');
 
     $scope.ready = false;
 
@@ -32,7 +31,6 @@ angular.module('styleguide.component', ['styleguide.common'])
       restrict: 'A',
       require: '?ngModel',
       link: function (scope, element, attrs, ngModel) {
-        console.log(ngModel);
 
         ngModel.$parsers.push(function toModel(input) {
           return JSON.parse(input);
