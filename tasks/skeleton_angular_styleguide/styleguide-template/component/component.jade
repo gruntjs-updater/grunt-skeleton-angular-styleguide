@@ -22,7 +22,10 @@ div(ng-if='ready')
       h3.t-styleguide-sidebar-group-label Data
       fieldset.styleguide-field.l-grid(ng-repeat='(name, value) in component.data')
         label.l-grid-cell.l-one-sixth.t-styleguide-caption {{ name }}
-        input.l-grid-cell.l-five-sixths(type='text', ng-model='data[name]')
+        div(ng-if="isComplexData(data[name])")
+          textarea.l-grid-cell.l-five-sixths(rows='4', ng-model='data[name]', complex-data-field)
+        div(ng-if="!isComplexData(data[name])")
+          input.l-grid-cell.l-five-sixths(type='text', ng-model='data[name]')
 
       h3.t-styleguide-sidebar-group-label Options
       fieldset.styleguide-field.l-grid(ng-repeat='(name, optionData) in component.options')

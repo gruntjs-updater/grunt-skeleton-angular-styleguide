@@ -13,7 +13,12 @@ angular.module('styleguide.component', ['styleguide.common'])
       _.each(component.options, function (optionData, name) {
         $scope.options[name] = optionData.default;
       });
+
     });
+
+    $scope.isComplexData = function (data) {
+      return typeof(data) === 'object';
+    }
 
 
 
@@ -21,5 +26,21 @@ angular.module('styleguide.component', ['styleguide.common'])
     $scope.tabIdx = 0;
     $scope.selectTab = function (index) {
       $scope.tabIdx = index;
+    }
+  }).directive('complexDataField', function () {
+    return {
+      restrict: 'A',
+      require: '?ngModel',
+      link: function (scope, element, attrs, ngModel) {
+        console.log(ngModel);
+
+        ngModel.$parsers.push(function toModel(input) {
+          return JSON.parse(input);
+        });
+
+        ngModel.$formatters.push(function toView(input) {
+          return JSON.stringify(input, undefined, 2);
+        });
+      }
     }
   });
