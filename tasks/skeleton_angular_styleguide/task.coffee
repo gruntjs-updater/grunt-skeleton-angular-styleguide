@@ -20,24 +20,6 @@ module.exports = (grunt, options)  ->
   createComponentsDataFile = (components, dest) ->
     grunt.file.write(dest + 'data/components.json', JSON.stringify(components, undefined, 2))
 
-  createStylesDataFile = (dest) ->
-    baseStylesPath = srcDir + '/css/styles/'
-
-    config =
-      copy:
-        typographyConfig:
-          cwd: baseStylesPath + 'typography'
-          expand: true
-          src: '*.json'
-          dest: dest + 'data'
-        colorsConfig:
-          cwd: baseStylesPath + 'colors'
-          expand: true
-          src: '*.json'
-          dest: dest + 'data'
-
-    grunt.config.merge(config)
-    grunt.task.run(['copy:typographyConfig', 'copy:colorsConfig'])
 
   generateStyleguideComponentPreview = (components, dest) ->
     jadeTemplate = _.map(components, (component) ->
@@ -48,7 +30,7 @@ module.exports = (grunt, options)  ->
     grunt.file.write(previewTemplateDest, htmlresult)
 
 
-  compileStyleguideTemplates = (dest) ->
+  compileStyleguideTemplates = (dest, options) ->
     config =
       copy:
         styleguideTemplate:
@@ -57,12 +39,21 @@ module.exports = (grunt, options)  ->
           expand: true
           cwd: base
 
+    locals =
+      baseFolder: options.baseFolder
+
+    grunt.log.writeln('locals', locals)
+
+
+
+
     grunt.config.merge(config)
     grunt.task.run(['copy:styleguideTemplate'])
     grunt.file.glob.sync(base + '**/*.jade').forEach  (path) ->
       destFile = dest + path.replace(base, '').replace('.jade', '.html')
-      templateContent = jade.renderFile(path, { pretty: true })
-      grunt.file.write(destFile, templateContent)
+      templateContentFn = jade.compileFile(path, { pretty: true })
+      grunt.file.write(destFile, templateContentFn(locals))
+      grunt.log.writeln('file', destFile)
 
 
   compileStyleguideStyles = (dest) ->
@@ -77,19 +68,73 @@ module.exports = (grunt, options)  ->
 
     grunt.config.merge(config)
     grunt.task.run(['sass:styleguideAngular'])
+
+
+  copyBowerComponents = (dest, bowerFolder) ->
+    config =
+      copy:
+        bowerToStyleguide:
+            cwd: bowerFolder
+            expand: true
+            src: 'bower_components/**/*'
+            dest: dest
+    grunt.config.merge(config)
+    grunt.task.run(['copy:bowerToStyleguide'])
+
+
+  copyColorsFile = (options) ->
+    grunt.config.merge(getAllConfigs(options))
+    grunt.task.run ['copy:colorsFile']
+  copyTypographyFile = ->
+      grunt.task.run ['copy:typographyFile']
+
+  getAllConfigs = (options) ->
+    dest           = options.dest
+    srcDir         = options.srcDir
+    baseStylesPath = srcDir + '/css/styles/'
+
+    config =
+      copy:
+        typographyFile:
+          cwd: baseStylesPath + 'typography'
+          expand: true
+          src: '*.json'
+          dest: dest + 'data'
+        colorsFile:
+          cwd: baseStylesPath + 'colors'
+          expand: true
+          src: '*.json'
+          dest: dest + 'data'
+    return config
+
+
   return {
-    generateStyleguide: (options) ->
-      dest   = options.dest
-      srcDir = options.srcDir
+    getAllConfigs      : getAllConfigs
+    copyColorsFile     : copyColorsFile
+    copyTypographyFile : copyTypographyFile
+
+    generateStyleguide : (options) ->
+
+      dest           = options.dest
+      srcDir         = options.srcDir
+      baseStylesPath = srcDir + '/css/styles/'
+
+      config = getAllConfigs(options)
+      grunt.config.merge(config)
+
+
       # Parse widgets metadata
       components = parseAngularComponentsMetadata()
 
       # create artifacts into styleguide/dist folder
       createComponentsDataFile(components, dest)
-      createStylesDataFile(dest)
+      copyColorsFile(options)
+      copyTypographyFile()
 
 
-      compileStyleguideTemplates(dest)
+      compileStyleguideTemplates(dest, options)
       compileStyleguideStyles(dest)
       generateStyleguideComponentPreview(components, dest)
+
+      copyBowerComponents(dest, options.bowerFolder)
   }
