@@ -27,7 +27,6 @@ module.exports = (grunt, options)  ->
       attrs = ' '
       _.each component.data, (dataValue, dataKey) ->
         attrs += changeCase.paramCase(dataKey) + "=" + '"' +  'data.' + dataKey + '", '
-        console.log('dataKey', dataKey, 'dataValue', dataValue)
       return component.name + '(' + attrs + 'options="options", ng-if="component.name === ' + "'" + component.name + "'" + '")'
     ).join('\n')
     htmlresult = jade.render(jadeTemplate, { pretty: true })
@@ -46,11 +45,7 @@ module.exports = (grunt, options)  ->
 
     locals =
       baseFolder: options.baseFolder
-
-    grunt.log.writeln('locals', locals)
-
-
-
+      exampleControllers: getExampleControllers(options)
 
     grunt.config.merge(config)
     grunt.task.run(['copy:styleguideTemplate'])
@@ -58,7 +53,6 @@ module.exports = (grunt, options)  ->
       destFile = dest + path.replace(base, '').replace('.jade', '.html')
       templateContentFn = jade.compileFile(path, { pretty: true })
       grunt.file.write(destFile, templateContentFn(locals))
-      grunt.log.writeln('file', destFile)
 
 
   compileStyleguideStyles = (dest) ->
@@ -120,7 +114,31 @@ module.exports = (grunt, options)  ->
           expand: true
           src: '*.html'
           dest: dest + 'pages'
+        controllersExample:
+          cwd: options.pagesDir
+          expand: true
+          src: '*.js'
+          dest: dest + 'pages'
     return config
+
+  getExampleControllers = (options) ->
+    grunt.log.writeln('getting getExampleControllers')
+    controllers = []
+    grunt.file.glob.sync(options.pagesDir + '/*.js').forEach  (path) ->
+      controllerName = path.replace(options.pagesDir + '/', '').replace('.js', '')
+      controllers.push(controllerName)
+    return controllers
+
+
+  copyExamplePages = (options) ->
+    pages = []
+
+    grunt.file.glob.sync(options.pagesDir + '/*.html').forEach  (path) ->
+      pageName = path.replace(options.pagesDir + '/', '').replace('.html', '')
+      pages.push(pageName)
+    grunt.file.write(options.dest + 'data/pages.json', JSON.stringify(pages, undefined, 2));
+    grunt.task.run(['copy:pagesExample', 'copy:controllersExample'])
+
 
 
   return {
@@ -152,14 +170,8 @@ module.exports = (grunt, options)  ->
       generateStyleguideComponentPreview(components, dest)
 
       copyBowerComponents(dest, options.bowerFolder)
+      copyExamplePages(options)
 
-      grunt.log.writeln('pages path', options.pagesDir)
-      pages = []
-      grunt.file.glob.sync(options.pagesDir + '/*.html').forEach  (path) ->
-        pageName = path.replace(options.pagesDir + '/', '').replace('.html', '')
-        pages.push(pageName)
-        grunt.log.writeln('page', pageName);
-      grunt.file.write(options.dest + 'data/pages.json', JSON.stringify(pages, undefined, 2));
-      # grunt.log.writeln('pages path', options.pagesDir)
-      grunt.task.run(['copy:pagesExample', 'copy:dataFiles'])
+
+      grunt.task.run(['copy:dataFiles'])
   }

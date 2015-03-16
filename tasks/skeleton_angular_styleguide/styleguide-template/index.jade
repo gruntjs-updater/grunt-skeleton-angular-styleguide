@@ -16,7 +16,7 @@ head
 
     script(src='bower_components/angular/angular.js')
     script(src='bower_components/ui-router/release/angular-ui-router.js')
-    script(src='bower_components/lodash/lodash.js')
+    script(src='bower_components/lodash/dist/lodash.js')
     script(src='bower_components/angular-filter/dist/angular-filter.js')
     script(src='bower_components/ng-multi-transclude/src/multi-transclude.js')
     script(src='main.js')
@@ -27,3 +27,5 @@ head
     script(src='typography/typography.controller.js')
     script(src='page/page.controller.js')
     script(src='widgets.js')
+    each controller in exampleControllers
+      script(src='pages/#{controller}.js')
