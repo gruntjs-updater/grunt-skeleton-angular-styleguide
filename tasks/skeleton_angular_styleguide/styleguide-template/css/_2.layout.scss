@@ -34,11 +34,13 @@
   flex: 1 0 30%;
   max-width: 15*$s-gutter;
   height: 100vh;
+  background: $c-grey-darkest;
+  overflow: scroll;
 }
 
 
 .l-styleguide-main-container {
-  flex: 1 0 auto;
+  flex: 1 0 70%;
   box-sizing: border-box;
   overflow-y: scroll;
   overflow-x: hidden;

@@ -22,7 +22,8 @@ module.exports = function(grunt) {
       baseFolder: '/',
       bowerFolder: 'lib/',
       dest: this.files[0].dest,
-      srcDir: 'app'
+      srcDir: 'app',
+      pagesDir: 'app/pages/example'
     });
 
     task.generateStyleguide(options);

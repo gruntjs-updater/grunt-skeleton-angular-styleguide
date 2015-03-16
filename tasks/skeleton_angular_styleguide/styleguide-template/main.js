@@ -9,10 +9,16 @@ angular
     var componentsData = [];
     var colorsData     = {};
     var typographyData = {};
+    var pagesData      = [];
+
+
+    var data = {};
     return {
       getComponentsData: getComponentsData,
       getTypographyData: getTypographyData,
-      getColorsData    : getColorsData
+      getColorsData    : getColorsData,
+      getPagesData     : getPagesData,
+      getData          : getData
     }
 
     function filterComponents (components, componentName) {
@@ -67,6 +73,36 @@ angular
       }
       return deferred.promise;
     }
+
+    function getPagesData () {
+      var deferred = $q.defer();
+      if (!_.isEmpty(pagesData)) {
+        deferred.resolve(pagesData);
+      } else {
+        $http
+          .get('data/pages.json')
+          .success(function (result) {
+            deferred.resolve(result);
+            pagesData = result;
+          })
+      }
+      return deferred.promise;
+    }
+
+    function getData (name) {
+      var deferred = $q.defer();
+      if (data[name]) {
+        deferred.resolve(data[name]);
+      } else {
+        $http
+          .get('data/' + name + '.json')
+          .success(function (result) {
+            deferred.resolve(result);
+            data[name] = result;
+          })
+      }
+      return deferred.promise;
+    }
   });
 
 
@@ -79,6 +115,7 @@ angular
     'styleguide.component',
     'styleguide.colors',
     'styleguide.typography',
+    'styleguide.page',
 
     'app.widgets'
   ])
@@ -103,6 +140,11 @@ angular
         url: '/typography',
         templateUrl: 'typography/typography.html',
         controller: 'TypographyCtrl'
+      })
+      .state('page', {
+        url: 'page/:pageName',
+        templateUrl: 'page/page.html',
+        controller: 'PageCtrl'
       })
       ;
 

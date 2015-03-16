@@ -1,5 +1,6 @@
-jade = require('jade')
-_    = require('lodash')
+jade       = require('jade')
+_          = require('lodash')
+changeCase = require('change-case')
 
 module.exports = (grunt, options)  ->
   # Config Variables
@@ -23,7 +24,11 @@ module.exports = (grunt, options)  ->
 
   generateStyleguideComponentPreview = (components, dest) ->
     jadeTemplate = _.map(components, (component) ->
-      return component.name + '(data="data", options="options", ng-if="component.name === ' + "'" + component.name + "'" + '")'
+      attrs = ' '
+      _.each component.data, (dataValue, dataKey) ->
+        attrs += changeCase.paramCase(dataKey) + "=" + '"' +  'data.' + dataKey + '", '
+        console.log('dataKey', dataKey, 'dataValue', dataValue)
+      return component.name + '(' + attrs + 'options="options", ng-if="component.name === ' + "'" + component.name + "'" + '")'
     ).join('\n')
     htmlresult = jade.render(jadeTemplate, { pretty: true })
     previewTemplateDest = dest + 'component/component-preview.html'
@@ -105,6 +110,16 @@ module.exports = (grunt, options)  ->
           expand: true
           src: '*.json'
           dest: dest + 'data'
+        dataFiles:
+          cwd: srcDir + '/data'
+          expand: true
+          src: '*.json'
+          dest: dest + 'data'
+        pagesExample:
+          cwd: options.pagesDir
+          expand: true
+          src: '*.html'
+          dest: dest + 'pages'
     return config
 
 
@@ -137,4 +152,14 @@ module.exports = (grunt, options)  ->
       generateStyleguideComponentPreview(components, dest)
 
       copyBowerComponents(dest, options.bowerFolder)
+
+      grunt.log.writeln('pages path', options.pagesDir)
+      pages = []
+      grunt.file.glob.sync(options.pagesDir + '/*.html').forEach  (path) ->
+        pageName = path.replace(options.pagesDir + '/', '').replace('.html', '')
+        pages.push(pageName)
+        grunt.log.writeln('page', pageName);
+      grunt.file.write(options.dest + 'data/pages.json', JSON.stringify(pages, undefined, 2));
+      # grunt.log.writeln('pages path', options.pagesDir)
+      grunt.task.run(['copy:pagesExample', 'copy:dataFiles'])
   }

@@ -17,3 +17,11 @@
         ui-sref='component( { name: component.name} )',
         ui-sref-active="is-active"
       ) {{ component.name | ucfirst }}
+
+  h2.t-styleguide-sidebar-group-label Pages
+  ul.list-reset
+    li(ng-repeat='page in pages')
+      a.t-styleguide-sidebar-link(
+        ui-sref='page( { pageName: page } )',
+        ui-sref-active="is-active"
+      ) {{ page | ucfirst }}
