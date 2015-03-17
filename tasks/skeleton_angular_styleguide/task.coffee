@@ -14,6 +14,7 @@ module.exports = (grunt, options)  ->
       name = componentData.name
       if componentData.type && componentData.type == "angular"
         componentData.basePath = path.replace('package.yml', '')
+        componentData.nameCC   = changeCase.camelCase(name)
         componentsMetadata.push(componentData)
 
     return componentsMetadata
@@ -139,6 +140,17 @@ module.exports = (grunt, options)  ->
       return name + '/' + depConf.main if depConf.main
     return widgetsDepsMainPath
 
+  createWidgetsDocumentation = (components, options) ->
+    config =
+      ngdocs:
+        options:
+          dest: options.dest + '/docs'
+        styleguideWidgetsDocs:
+          src: [options.srcDir + '/components/**/*.js']
+          title: 'Widgets Documentation'
+    grunt.config.merge(config)
+    grunt.task.run(['ngdocs:styleguideWidgetsDocs'])
+
 
 
   copyExamplePages = (options) ->
@@ -182,6 +194,9 @@ module.exports = (grunt, options)  ->
 
       copyBowerComponents(dest, options.bowerFolder)
       copyExamplePages(options)
+
+
+      createWidgetsDocumentation(components, options)
 
 
       grunt.task.run(['copy:dataFiles'])

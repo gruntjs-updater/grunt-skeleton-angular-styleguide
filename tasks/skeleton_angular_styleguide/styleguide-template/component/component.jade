@@ -3,9 +3,11 @@ div(ng-if='ready')
     .l-grid-cell.l-one-whole.styleguide-component-header
       h1.t-styleguide-title {{component.name}}
       p.t-styleguide-caption Version {{component.version}} — Author: {{component.author}}
+      a(href="", ng-if="tabIdx === 0 && showOptions",  ng-click="toggleOptionsVisibility()") Hide Options
+      a(href="", ng-if="tabIdx === 0 && !showOptions", ng-click="toggleOptionsVisibility()")  Show Options
 
   .l-grid
-    .l-grid-cell.l-one-half.styleguide-component-main
+    .l-grid-cell.styleguide-component-main(ng-class="{ 'l-one-half': tabIdx === 0 && showOptions, 'l-one-whole': tabIdx !== 0 || (tabIdx === 0 && !showOptions) }")
       .styleguide-tabs
         ul.styleguide-tabs-list
           li(ng-repeat="tab in tabs")
@@ -16,9 +18,11 @@ div(ng-if='ready')
           pre some html here
         .styleguide-tab-container(ng-show="tabIdx == 2")
           pre some jade in here
+        .styleguide-tab-container(ng-show="tabIdx == 3")
+          div(ng-include="'docs/partials/styleguideWidgetsDocs/' + component.nameCC + '.html'")
 
 
-    .l-grid-cell.l-one-half.styleguide-component-drawer
+    .l-grid-cell.styleguide-component-drawer(ng-class="{ 'l-one-half': tabIdx === 0 && showOptions, 'is-hidden': tabIdx !== 0 || !showOptions}")
       h3.t-styleguide-sidebar-group-label Data
       fieldset.styleguide-field.l-grid(ng-repeat='(name, value) in component.data')
         label.l-grid-cell.l-one-sixth.t-styleguide-caption {{ name }}

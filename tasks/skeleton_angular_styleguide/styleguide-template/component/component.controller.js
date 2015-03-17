@@ -3,6 +3,7 @@ angular.module('styleguide.component', ['styleguide.common'])
     var componentName = $stateParams.name;
 
     $scope.ready = false;
+    $scope.showOptions = true;
 
     StyleguideData.getComponentsData(componentName).then(function (component) {
       $scope.ready     = true;
@@ -23,10 +24,16 @@ angular.module('styleguide.component', ['styleguide.common'])
       return typeof(data) === 'object';
     }
 
-    $scope.tabs   = [ 'view', 'source', 'html'];
+    $scope.tabs   = [ 'view', 'source', 'html', 'docs' ];
     $scope.tabIdx = 0;
     $scope.selectTab = function (index) {
       $scope.tabIdx = index;
+    }
+
+
+
+    $scope.toggleOptionsVisibility = function () {
+      $scope.showOptions = !$scope.showOptions;
     }
   }).directive('complexDataField', function () {
     return {

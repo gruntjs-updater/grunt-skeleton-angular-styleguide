@@ -10,6 +10,7 @@
 
 .styleguide-component-main {
   // background: rgba(red, 0.1);
+  pre { background: $c-grey-lightest; padding: $s-gutter; }
 }
 
 .styleguide-component-drawer {
@@ -27,6 +28,7 @@
 // TABS
 .styleguide-tabs {
   overflow: scroll;
+  -webkit-user-select: initial;
 }
 
 .styleguide-tabs-list {
