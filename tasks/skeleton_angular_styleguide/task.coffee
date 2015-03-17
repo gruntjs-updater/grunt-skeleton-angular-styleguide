@@ -44,8 +44,11 @@ module.exports = (grunt, options)  ->
           cwd: base
 
     locals =
-      baseFolder: options.baseFolder
-      exampleControllers: getExampleControllers(options)
+      baseFolder         : options.baseFolder
+      exampleControllers : getExampleControllers(options)
+      widgetsMainPaths   : getWidgetsMainPaths(options)
+
+    console.log('locals', locals)
 
     grunt.config.merge(config)
     grunt.task.run(['copy:styleguideTemplate'])
@@ -128,6 +131,14 @@ module.exports = (grunt, options)  ->
       controllerName = path.replace(options.pagesDir + '/', '').replace('.js', '')
       controllers.push(controllerName)
     return controllers
+
+  getWidgetsMainPaths = (options) ->
+    bowerConf = grunt.file.readJSON('bower.json')
+    widgetsDepsMainPath = _.map bowerConf.dependencies, (version, name) ->
+      depConf = grunt.file.readJSON(options.bowerFolder + 'bower_components/' + name + '/bower.json')
+      return name + '/' + depConf.main if depConf.main
+    return widgetsDepsMainPath
+
 
 
   copyExamplePages = (options) ->
