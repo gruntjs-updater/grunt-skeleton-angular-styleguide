@@ -49,7 +49,6 @@ module.exports = (grunt, options)  ->
       exampleControllers : getExampleControllers(options)
       widgetsMainPaths   : getWidgetsMainPaths(options)
 
-    console.log('locals', locals)
 
     grunt.config.merge(config)
     grunt.task.run(['copy:styleguideTemplate'])
@@ -126,7 +125,6 @@ module.exports = (grunt, options)  ->
     return config
 
   getExampleControllers = (options) ->
-    grunt.log.writeln('getting getExampleControllers')
     controllers = []
     grunt.file.glob.sync(options.pagesDir + '/*.js').forEach  (path) ->
       controllerName = path.replace(options.pagesDir + '/', '').replace('.js', '')
@@ -134,19 +132,30 @@ module.exports = (grunt, options)  ->
     return controllers
 
   getWidgetsMainPaths = (options) ->
+    DEPENDENCIES_TO_SKIP = ['jquery']
     bowerConf = grunt.file.readJSON('bower.json')
     widgetsDepsMainPath = _.map bowerConf.dependencies, (version, name) ->
       depConf = grunt.file.readJSON(options.bowerFolder + 'bower_components/' + name + '/bower.json')
-      # if this dependency has a main file
-      if depConf.main
-        jsMain = []
-        if _.isArray(depConf.main)
-          jsMain = _.filter depConf.main, (main) ->
-            return main.indexOf('.js') != -1
-        else
-          jsMain.push(depConf.main) if depConf.main.indexOf('.js') != -1
-        return _.map jsMain, (jsMainPath) ->
-          return name + '/' + jsMain
+
+      # we do not want to keep this dependency
+      # because either the styleguide also uses it or it doesn't have a file
+      if _.contains(DEPENDENCIES_TO_SKIP, name) || !depConf.main
+        return []
+
+
+      isJsFile = (filename) -> return filename.indexOf('.js') != -1
+
+      # if main is not an array (i.e. it has only one file) convert it to array
+      if !_.isArray(depConf.main)
+        depConf.main = [depConf.main]
+
+      javascriptOnlyFiles = _.filter(depConf.main, isJsFile)
+
+
+
+      return _.map javascriptOnlyFiles, (jsMainPath) ->
+        return name + '/' + jsMainPath
+
 
     return _.flatten(widgetsDepsMainPath)
 
