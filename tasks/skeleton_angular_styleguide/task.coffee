@@ -137,8 +137,18 @@ module.exports = (grunt, options)  ->
     bowerConf = grunt.file.readJSON('bower.json')
     widgetsDepsMainPath = _.map bowerConf.dependencies, (version, name) ->
       depConf = grunt.file.readJSON(options.bowerFolder + 'bower_components/' + name + '/bower.json')
-      return name + '/' + depConf.main if depConf.main
-    return widgetsDepsMainPath
+      # if this dependency has a main file
+      if depConf.main
+        jsMain = []
+        if _.isArray(depConf.main)
+          jsMain = _.filter depConf.main, (main) ->
+            return main.indexOf('.js') != -1
+        else
+          jsMain.push(depConf.main) if depConf.main.indexOf('.js') != -1
+        return _.map jsMain, (jsMainPath) ->
+          return name + '/' + jsMain
+
+    return _.flatten(widgetsDepsMainPath)
 
   createWidgetsDocumentation = (components, options) ->
     config =
