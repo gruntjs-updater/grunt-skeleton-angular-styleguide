@@ -16,10 +16,6 @@ angular.module('styleguide.component', ['styleguide.common'])
 
     });
 
-    $scope.$watchCollection('data', function (newVal) {
-      console.log('component controller changed data', newVal);
-    });
-
     $scope.isComplexData = function (data) {
       return typeof(data) === 'object';
     }
