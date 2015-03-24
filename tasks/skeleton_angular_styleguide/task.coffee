@@ -115,7 +115,7 @@ module.exports = (grunt, options)  ->
         pagesExample:
           cwd: options.pagesDir
           expand: true
-          src: '*.html'
+          src: '**/*.{html,js}'
           dest: dest + 'pages'
         controllersExample:
           cwd: options.pagesDir
@@ -126,7 +126,7 @@ module.exports = (grunt, options)  ->
 
   getExampleControllers = (options) ->
     controllers = []
-    grunt.file.glob.sync(options.pagesDir + '/*.js').forEach  (path) ->
+    grunt.file.glob.sync(options.pagesDir + '/**/*.js').forEach  (path) ->
       controllerName = path.replace(options.pagesDir + '/', '').replace('.js', '')
       controllers.push(controllerName)
     return controllers
@@ -175,7 +175,7 @@ module.exports = (grunt, options)  ->
   copyExamplePages = (options) ->
     pages = []
 
-    grunt.file.glob.sync(options.pagesDir + '/*.html').forEach  (path) ->
+    grunt.file.glob.sync(options.pagesDir + '/**/*.html').forEach  (path) ->
       pageName = path.replace(options.pagesDir + '/', '').replace('.html', '')
       pages.push(pageName)
     grunt.file.write(options.dest + 'data/pages.json', JSON.stringify(pages, undefined, 2));
