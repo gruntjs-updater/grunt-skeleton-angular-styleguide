@@ -34,6 +34,5 @@ div(ng-if='ready')
       h3.t-styleguide-sidebar-group-label Options
       fieldset.styleguide-field.l-grid(ng-repeat='(name, optionData) in component.options')
         label.l-grid-cell.l-one-sixth.t-styleguide-caption {{ name }}
-        select.l-grid-cell.l-five-sixths(ng-model='options[name]')
-          option(value='{{ optionData.default }}', selected) {{optionData.default}} (default)
-          option(ng-repeat='option in optionData.values', ng-if="option !== optionData.default", value='{{ option }}') {{option}}
+        select.l-grid-cell.l-five-sixths(ng-model='options[name]'
+                                         ng-options="option for option in optionData.values")
