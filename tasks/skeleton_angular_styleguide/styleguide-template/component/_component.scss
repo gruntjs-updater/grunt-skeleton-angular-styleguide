@@ -19,15 +19,14 @@
 }
 
 .styleguide-tab-container {
-  padding: $s-gutter;
   position: relative;
+  overflow: hidden;
 }
 
 
 
 // TABS
 .styleguide-tabs {
-  overflow: scroll;
   -webkit-user-select: initial;
 }
 
