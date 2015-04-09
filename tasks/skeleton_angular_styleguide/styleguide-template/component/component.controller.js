@@ -20,7 +20,7 @@ angular.module('styleguide.component', ['styleguide.common'])
       return typeof(data) === 'object';
     }
 
-    $scope.tabs   = [ 'view', 'source', 'html', 'docs' ];
+    $scope.tabs   = [ 'view', 'docs' ];
     $scope.tabIdx = 0;
     $scope.selectTab = function (index) {
       $scope.tabIdx = index;
