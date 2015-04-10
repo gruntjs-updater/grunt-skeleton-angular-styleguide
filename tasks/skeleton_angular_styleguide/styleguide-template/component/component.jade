@@ -15,10 +15,6 @@ div(ng-if='ready')
         .styleguide-tab-container(ng-show="tabIdx == 0")
           div(ng-include="'component/component-preview.html'")
         .styleguide-tab-container(ng-show="tabIdx == 1")
-          pre some html here
-        .styleguide-tab-container(ng-show="tabIdx == 2")
-          pre some jade in here
-        .styleguide-tab-container(ng-show="tabIdx == 3")
           div(ng-include="'docs/partials/styleguideWidgetsDocs/' + component.nameCC + '.html'")
 
 
