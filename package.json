@@ -1,7 +1,7 @@
 {
   "name": "grunt-skeleton-angular-styleguide",
   "description": "Grunt task that generates an angular styleguide using skeleton modules.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "homepage": "https://github.com/ginetta/grunt-skeleton-angular-styleguide",
   "author": {
     "name": "Ginetta",
